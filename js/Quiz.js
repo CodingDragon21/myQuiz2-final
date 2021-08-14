@@ -1,66 +1,77 @@
-class Quiz {
-  constructor(){
-    this.quizResult = createElement("h1")
-  }
-  getState(){
-    var gameStateRef  = database.ref('gameState');
-    gameStateRef.on("value",function(data){
-       gameState = data.val();
-    })
+class Quiz{
+    constructor(){
 
-  }
-
-  update(state){
-    database.ref('/').update({
-      gameState: state
-    });
-  }
-
-  async start(){
-    if(gameState === 0){
-      contestant = new Contestant();
-      var contestantCountRef = await database.ref('contestantCount').once("value");
-      if(contestantCountRef.exists()){
-        contestantCount = contestantCountRef.val();
-        contestant.getCount();
-      }
-      question = new Question()
-      question.display();
     }
-  }
-
-  play(){
-    //write code here to hide question elements
-question.hide()
-    //write code to change the background color here
-   background("purple")
-    //write code to show a heading for showing the result of Quiz
-  this.quizResult.html("Quiz Result")
-  this.quizResult.position(350,0)
-    //call getContestantInfo( ) here
-Contestant.getPlayerInfo()
-    //write condition to check if contestantInfo is not undefined
-if(allContestants !== undefined){
-  fill("white")
-  textSize(20)
-  text("NOTE: Contestants who answered correct are in Green", 130,230)
-  for(var plr in allContestants){
-    var correctAns = "2"
-    if(correctAns === allContestants[plr].answer){
-      fill("lime")
-      textSize(22)
-      text( allContestants[plr].name+ ":" + allContestants[plr].answer, 300, 320)
-    }else{
-      fill("red")
-      textSize(22)
-      text( allContestants[plr].name + ":" + allContestants[plr].answer, 300,370)
+    getState(){
+        database.ref('gameState').on("value",(data)=>{
+            gameState = data.val();
+        })
     }
-  }
-}
-    //write code to add a note here
-
-    //write code to highlight contest who answered correctly
+    update(state){
+        database.ref('/').update({
+            gameState : state
+        })
+    }
+    async start(){
+        if(gameState === 0){
+            contestant = new Contestant();
+            contestantCount = contestant.constCount();
+            ques = new Question();
+            ques.display();
+        }
+       
+    }
+    play(){
+        ques.hide();
+        var note = createElement("h4");
+        note.style("color","blue");
+        note.html("RESULT");
+        note.position(270,250);
+       
+        Contestant.getPlayerInfo();
+        
+        if(allPlayers !== undefined){
+          background("yellow");
+          
+         
+          //index of the array
+          var index = 0;
     
-  }
-
+          //x and y position of the cars
+          var x =200 ;
+          var y= 275;
+    
+          for(var plr in allPlayers){
+            //add 1 to the index for every loop
+            index = index + 1 ;
+    
+            //position the cars a little away from each other in x direction
+            y = y + 20;
+            //use data form the database to display the cars in y direction
+            
+            var correctAns = "2"
+    
+            if (correctAns === allPlayers[plr].answer){
+              //class40
+              fill("green")
+            
+            }
+            else{
+                fill("red");
+               
+            }
+            
+            textAlign(CENTER);
+            textSize(20);
+            text(allPlayers[plr].name +": "+allPlayers[plr].answer, x,y);
+            }
+           
+           
+           
+            //textSize(15);
+            //text(allPlayers[plr].name + ": " + allPlayers[plr].distance, 120,display_position)
+          }
+    
+        }
+    
 }
